@@ -1,4 +1,5 @@
 const yargs = require('yargs');
+const notes = require('./notes');
 
 yargs.version('asd');
 
@@ -18,15 +19,22 @@ yargs.command({
         }
     },
     handler: (argv) => {
-        console.log('Note added!', argv);
+        notes.addNotes(argv.title, argv.body);
     }
 })
 
 yargs.command({
     command: 'remove',
     describe: 'remove a note',
-    handler: () => {
-        console.log('Note removed!');
+    builder: {
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        }
+    },
+    handler: (argv) => {
+        notes.removeNote(argv.title);
     }
 })
 
@@ -34,15 +42,22 @@ yargs.command({
     command: 'list',
     describe: 'list all notes',
     handler: () => {
-        console.log('Note listed!');
+        notes.printNotes();
     }
 })
 
 yargs.command({
     command: 'read',
     describe: 'read a new note',
-    handler: () => {
-        console.log('Note read!');
+    builder: {
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        }
+    },
+    handler: (argv) => {
+        notes.readNote(argv.title);
     }
 })
 
