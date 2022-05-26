@@ -13,7 +13,13 @@
 <body>
     <div class="main-content">
         {{>header}}
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempore odio illo dignissimos consequatur ratione odit quisquam quod aspernatur officiis. Ab expedita natus quaerat ipsum mollitia molestiae, repellendus dolor. Temporibus, incidunt.</p>
+        <p>Check the weather of any location:</p>
+        <form>
+            <input id="locSearch" type="text" placeholder="Location">
+            <button>search</button>
+        </form>
+        <p id="locationData"></p>
+        <p id="weatherData"></p>
     </div>
     {{>footer}}
 </body>

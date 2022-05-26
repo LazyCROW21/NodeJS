@@ -1,6 +1,10 @@
 const express = require('express');
 const path = require('path');
 const hbs = require('hbs');
+const geoCode = require('./utils/geoCode');
+const weather = require('./utils/weather');
+
+const key = '5bb2d4238cd8486e899102010222505'
 
 const app = express();
 
@@ -44,7 +48,47 @@ app.get('/help/*', (req, res) => {
 })
 
 app.get('/weather', (req, res) => {
-    res.send({cond: 'weather world'})
+    if(!req.query.address) {
+        return res.send({
+            error: 'You must provide the address parameter'
+        })
+    }
+
+    geoCode(key, req.query.address, (err, data) => {
+        if(err) {
+            return res.send({
+                error: err
+            });
+        }
+        let location = {}
+        if(data.length !== 0) {
+            location = data[0]
+        }
+
+        weather(key, location.name, (err, weather) => {
+            if(err) {
+                return res.send({
+                    error: err
+                });
+            }
+            return res.send({
+                location: data[0],
+                weather: weather
+            })
+        });
+    });
+})
+
+app.get('/product', (req, res) => {
+    if(!req.query.search) {
+        return res.send({
+            error: 'You must provide a search parameter'
+        })
+    }
+    console.log(req.query.search)
+    res.send({
+        products: []
+    })
 })
 
 app.get('*', (req, res) => {
