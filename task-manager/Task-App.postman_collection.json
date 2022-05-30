@@ -28,7 +28,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Hero\",\r\n    \"email\": \"hero@devil.com\",\r\n    \"password\": \"qwerty12345\",\r\n    \"age\": 22\r\n}",
+							"raw": "{\r\n    \"name\": \"Jade\",\r\n    \"email\": \"jade@jewel.com\",\r\n    \"password\": \"qwerty12345\",\r\n    \"age\": 21\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -53,12 +53,20 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"Do homework\",\r\n    \"completed\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "localhost:3000/tasks",
+							"raw": "{{base_url}}/tasks",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "3000",
 							"path": [
 								"tasks"
 							]
@@ -86,20 +94,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/users/:id",
+							"raw": "localhost:3000/users/me",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
 								"users",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "6290b7957175fb549400b267"
-								}
+								"me"
 							]
 						}
 					},
@@ -112,7 +114,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"completed\": true\r\n}",
+							"raw": "{\r\n    \"completed\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -132,7 +134,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "6290b01e8cbb834d8b87b18f"
+									"value": "62930e3f601efe1568a7b96b"
 								}
 							]
 						}
@@ -192,13 +194,33 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/tasks",
+							"raw": "{{base_url}}/tasks?sortBy=createdAt-asc",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "3000",
 							"path": [
 								"tasks"
+							],
+							"query": [
+								{
+									"key": "completed",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": "createdAt-asc"
+								}
 							]
 						}
 					},
@@ -210,19 +232,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/users/:id",
+							"raw": "localhost:3000/tasks/:id",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"users",
+								"tasks",
 								":id"
 							],
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "62930e3f601efe1568a7b96b"
 								}
 							]
 						}
@@ -277,7 +299,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "6293177bd8625522e4963524"
 								}
 							]
 						}
