@@ -169,20 +169,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/users/:id",
+							"raw": "localhost:3000/users/me",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
 								"users",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": ""
-								}
+								"me"
 							]
 						}
 					},
@@ -331,7 +325,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"hero@devil.com\",\r\n    \"password\": \"qwerty12345\"\r\n}",
+							"raw": "{\r\n    \"email\": \"jade@jewel.com\",\r\n    \"password\": \"qwerty12345\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -365,6 +359,116 @@
 							"path": [
 								"users",
 								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "File Upload",
+			"item": [
+				{
+					"name": "Multer Test",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "upload",
+									"type": "file",
+									"src": "/C:/Users/LazyCROW/Pictures/craft.jpeg"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Avatar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/C:/Users/LazyCROW/Downloads/-s-BnNwg_400x400.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/users/me/avatar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"avatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Avatar",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/me/avatar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"avatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:id/avatar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":id",
+								"avatar"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6293176cd8625522e4963522"
+								}
 							]
 						}
 					},
