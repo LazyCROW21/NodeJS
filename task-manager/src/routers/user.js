@@ -22,7 +22,7 @@ router.post('/users', async (req, res) => {
     const user = new User(req.body)
     try {
         await user.save()
-        // sendWelcomeEmail(user.email, user.name)
+        sendWelcomeEmail(user.email, user.name)
         const token = await user.generateAuthToken()
         res.status(201).send({ user, token })
     } catch (e) {
@@ -103,14 +103,6 @@ router.get('/users/me', authMiddleware, async (req, res) => {
     res.send(req.user)
 })
 
-router.get('/users/me', async (req, res) => {
-    try {
-        res.send(req.user)
-    } catch (e) {
-        res.status(500).send(e)
-    }
-})
-
 router.patch('/users/me', authMiddleware, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = [
@@ -132,7 +124,7 @@ router.patch('/users/me', authMiddleware, async (req, res) => {
 router.delete('/users/me', authMiddleware, async (req, res) => {
     try {
         await req.user.remove()
-        // sendCancelationEmail(req.user.email, req.user.name)
+        sendCancelationEmail(req.user.email, req.user.name)
         res.send(req.user)
     } catch (e) {
         res.status(500).send()
