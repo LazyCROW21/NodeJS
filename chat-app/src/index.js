@@ -3,7 +3,13 @@ const http = require('http')
 const path = require('path')
 const socketio = require('socket.io')
 const Filter = require('bad-words')
-const { generateMessage } = require('./utils/messages')
+const { generateUserMsg, generateSysMsg, generateUserLocMsg } = require('./utils/messages')
+const {
+    addUser,
+    getUser,
+    getUsersByRoom,
+    removeUser
+} = require('./utils/users')
 
 const app = express()
 const server = http.createServer(app)
@@ -17,32 +23,60 @@ app.use(express.static(publicPath))
 
 io.on('connection', (socket) => {
     console.log('New socket connection')
-    socket.emit('message', generateMessage('Welcome!'))
 
-    socket.on('join', ({username, room}) => {
-        socket.join(room)
+    socket.on('join', ({username, room}, callback) => {
+        const { error, user } = addUser({
+            id: socket.id,
+            username,
+            room
+        })
+        if(error) {
+            return callback(error)
+        }
+        socket.emit('sysMsg', generateSysMsg('Welcome!'))
+        socket.join(user.room)
         socket.broadcast
-        .to(room)
-        .emit('message', generateMessage(`${username} has joined!`))
+        .to(user.room)
+        .emit('sysMsg', generateSysMsg(`${user.username} has joined!`))
+        io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUsersByRoom(user.room)
+        })
+        callback()
     })
 
-    socket.on('message', (msg, callback) => {
-        console.log('MSG Received:', msg)
+    socket.on('sendMsg', (msg, callback) => {
         const filter = new Filter()
         if(filter.isProfane(msg)) {
             return callback('Offensive content')
         }
-        io.to(room).emit('message', generateMessage(msg))
+        const user = getUser(socket.id)
+        if(!user) {
+            return callback('Error: User not registered in any room')
+        }
+        io.to(user.room).emit('userMsg', generateUserMsg(user.username, msg))
         callback()
     })
 
-    socket.on('sendLocation', (loc, callback) => {
-        io.emit('locationMessage', generateMessage(loc))
+    socket.on('sendLocation', (coords, callback) => {
+        const user = getUser(socket.id)
+        if(!user) {
+            return callback('Error: User not registered in any room')
+        }
+        io.emit('userLocMsg', generateUserLocMsg(user.username, coords))
         callback()
     })
 
     socket.on('disconnect', () => {
-        io.emit('message', generateMessage('A user has left!'))
+        const user = removeUser(socket.id)
+        if(user) {
+            io.to(user.room).emit('sysMsg', generateSysMsg(`${user.username} has left!`))
+
+            io.to(user.room).emit('roomData', {
+                room: user.room,
+                users: getUsersByRoom(user.room)
+            })
+        }
     })
 })
 

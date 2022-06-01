@@ -21,11 +21,10 @@
   </nav>
   <div class="container hcontainter">
     <div class="row h-100">
-      <div class="col-3 bg-dark"></div>
+      <div class="col-3 bg-dark p-2 overflow-auto" id="sidebar"></div>
       <div class="col-9 h-100">
         <div class="d-flex flex-column justify-content-end h-100">
-          <div id="msg-box" class="p-2">
-          </div>
+          <div id="msg-box" class="p-2 overflow-auto"></div>
           <div class="row">
             <div class="col-9">
               <input type="text" class="form-control" id="msg-inp" placeholder="type message here.." />
@@ -34,7 +33,9 @@
               <button class="btn btn-primary" id="send-btn">send</button>
             </div>
             <div class="col-2">
-              <button class="btn btn-primary" id="loc-send-btn">send location</button>
+              <button class="btn btn-primary" id="loc-send-btn">
+                send location
+              </button>
             </div>
           </div>
         </div>
@@ -42,23 +43,72 @@
     </div>
   </div>
 
-  <!-- Templates -->
-  <script id="msg-template" type="text/html">
+  <!-- Templates - Other Msg -->
+  <script id="other-msg-template" type="text/html">
     <div class="card my-1">
       <div class="card-body">
         <p class="mb-1 ">
-          <span class="fw-bold">User1 </span>
+          <span class="fw-bold" style="color: {{ color }};">{{ username }}</span>
           <span class="text-muted"><small>{{ createdAt }}</small></span>
         </p>
         <p class="mb-1">{{ message }}</p>
       </div>
     </div>
   </script>
-  <script id="loc-msg-template" type="text/html">
-    <div>
-      <a href="{{ link }}" target="_blank">{{ title }}</a>
-      <p><small>{{ createdAt }}</small></p>
+  <!-- Templates - My Msg -->
+  <script id="my-msg-template" type="text/html">
+    <div class="card my-1">
+      <div class="card-body text-end">
+        <p class="mb-1">
+          <span class="fw-bold">{{ username }}</span>
+          <span class="text-muted"><small>{{ createdAt }}</small></span>
+        </p>
+        <p class="mb-1">{{ message }}</p>
+      </div>
     </div>
+  </script>
+  <!-- Templates - System Msg -->
+  <script id="sys-msg-template" type="text/html">
+    <p class="text-center">{{ message }}</p>
+  </script>
+  <!-- Templates: My Location msg -->
+  <script id="my-loc-msg-template" type="text/html">
+    <div class="card my-1">
+      <div class="card-body text-end">
+        <p class="mb-1">
+          <span class="fw-bold">{{ username }}</span>
+          <span class="text-muted"><small>{{ createdAt }}</small></span>
+        </p>
+        <p class="mb-1">
+          <a href="{{ link }}" target="_blank">{{ username }}'s location</a>
+        </p>
+      </div>
+    </div>
+  </script>
+  <!-- Templates: Others Location msg -->
+  <script id="other-loc-msg-template" type="text/html">
+    <div class="card my-1">
+      <div class="card-body">
+        <p class="mb-1">
+          <span class="fw-bold" style="color: {{ color }};">{{ username }}</span>
+          <span class="text-muted"><small>{{ createdAt }}</small></span>
+        </p>
+        <p class="mb-1">
+          <a href="{{ link }}" target="_blank">{{ username }}'s location</a>
+        </p>
+      </div>
+    </div>
+  </script>
+  <!-- Templates: Side Bar Room info -->
+  <script id="sidebar-template" type="text/html">
+    <h3 class="text-white">{{ room }}</h3>
+    <hr  class="text-white"/>
+    <h4 class="text-white">Users:</h4>
+    <ul class="list-group">
+      {{#users}}
+      <li class="list-group-item">{{ username }}</li>
+      {{/users}}
+    </ul>
   </script>
   <!-- JavaScript Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
