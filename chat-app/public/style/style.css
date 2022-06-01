@@ -1,0 +1,26 @@
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+}
+.hcontainter {
+    height: calc(100% - 4rem);
+}
+/* button {
+    background-color: purple;
+    color: white;
+    padding: 0.5rem;
+    cursor: pointer;
+    border: 1px solid lavender;
+}
+
+button:hover {
+    background-color: darkorchid;
+    transition: 250ms all linear;
+}
+
+input {
+    padding: 0.4rem;
+    border: 1px solid gray;
+} */

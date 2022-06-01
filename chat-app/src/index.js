@@ -3,6 +3,7 @@ const http = require('http')
 const path = require('path')
 const socketio = require('socket.io')
 const Filter = require('bad-words')
+const { generateMessage } = require('./utils/messages')
 
 const app = express()
 const server = http.createServer(app)
@@ -16,25 +17,32 @@ app.use(express.static(publicPath))
 
 io.on('connection', (socket) => {
     console.log('New socket connection')
-    socket.emit('message', 'Welcome!')
-    socket.broadcast.emit('message', 'A new user joined')
+    socket.emit('message', generateMessage('Welcome!'))
+
+    socket.on('join', ({username, room}) => {
+        socket.join(room)
+        socket.broadcast
+        .to(room)
+        .emit('message', generateMessage(`${username} has joined!`))
+    })
+
     socket.on('message', (msg, callback) => {
         console.log('MSG Received:', msg)
         const filter = new Filter()
         if(filter.isProfane(msg)) {
             return callback('Offensive content')
         }
-        io.emit('message', msg)
+        io.to(room).emit('message', generateMessage(msg))
         callback()
     })
 
     socket.on('sendLocation', (loc, callback) => {
-        io.emit('message', loc)
+        io.emit('locationMessage', generateMessage(loc))
         callback()
     })
 
     socket.on('disconnect', () => {
-        io.emit('message', 'A user has left!')
+        io.emit('message', generateMessage('A user has left!'))
     })
 })
 

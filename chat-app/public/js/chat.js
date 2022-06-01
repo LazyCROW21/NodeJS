@@ -1,16 +1,23 @@
 const socket = io()
-
+const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
 const cntspan = document.querySelector('#cnt-p')
 const msginput = document.querySelector('#msg-inp')
 const msgbox = document.querySelector('#msg-box')
 const btn = document.querySelector('#send-btn')
 const locbtn = document.querySelector('#loc-send-btn')
+const msgTemplate = document.querySelector('#msg-template').innerHTML
+const locMsgTemplate = document.querySelector('#loc-msg-template').innerHTML
 
-socket.on('message', (data) => {
-    console.log(data)
-    let msgDOM = document.createElement('p')
-    msgDOM.textContent = data
-    msgbox.appendChild(msgDOM)
+socket.on('message', ({message, createdAt}) => {
+    createdAt = moment(createdAt).format('h:mm a')
+    const html = Mustache.render(msgTemplate, { message, createdAt })
+    msgbox.insertAdjacentHTML('beforeend', html)
+})
+
+socket.on('locationMessage', ({message, createdAt}) => {
+    createdAt = moment(createdAt).format('h:mm a')
+    const html = Mustache.render(locMsgTemplate, { link: message, title: "User's Location", createdAt })
+    msgbox.insertAdjacentHTML('beforeend', html)
 })
 
 msginput.addEventListener('keypress', (e) => {
@@ -37,8 +44,6 @@ msginput.addEventListener('keypress', (e) => {
     }
 })
 
-
-
 btn.addEventListener('click', () => {
     msginput.disabled = true
     btn.disabled = true
@@ -61,18 +66,23 @@ btn.addEventListener('click', () => {
     msginput.focus()
 })
 
+const locMSG = (lat, long) => {
+    return `https://www.google.com/maps/@${lat},${long}`
+}
+
 locbtn.addEventListener('click', () => {
     if (navigator.geolocation) {
+        locbtn.disabled = true
         navigator.geolocation.getCurrentPosition((position) => {
             socket.emit(
                 'sendLocation',
-                `Location:- lat( ${position.coords.latitude} ), long ( ${position.coords.longitude} )`,
-                (data) => {
-                    let msgDOM = document.createElement('p')
-                    msgDOM.textContent = 'Location shared'
-                    msgbox.appendChild(msgDOM)
+                locMSG(position.coords.latitude, position.coords.longitude),
+                () => {
+                    locbtn.disabled = false
                 }
             )
         })
     }
 })
+
+socket.emit('join', { username, room })
